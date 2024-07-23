@@ -4,7 +4,7 @@ let newGameBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
 let turnO = true;
-let count=0;
+let count = 0;
 
 const winPatterns = [
     [0, 1, 2],
@@ -15,56 +15,38 @@ const winPatterns = [
     [2, 5, 8],
     [0, 4, 8],
     [2, 4, 6],
-
 ];
+
 const resetGame = () => {
     turnO = true;
     count =0;
-    enableBoxes();
-    msgContainer.classList.add("hide");
-};
-boxes.forEach((box) => {
-    box.addEventListener("click", () => {
-        console.log("box was clicked");
-        if (turnO) {
-            box.innerText = "O";
-            turnO = false;
-        } else {
-            box.innerText = "X";
-            turnO = true;
-        }
-        box.disabled = true;
-        count++;
-        let isWinner = checkWinner();
-        if(count ===9 && !isWinner){
-            gameDraw();
-        }
-
-    });
-});
-const gameDraw = () =>{
-    msg.innerText="Game was a  Draw";
-    msgContainer.classList.remove("hide");
-    disableBoxes();
-};
-const disableBoxes = () => {
-    for (let box of boxes) {
-        box.disabled = true;
-    }
-};
-const enableBoxes = () => {
     for (let box of boxes) {
         box.disabled = false;
         box.innerText = "";
-
     }
+    msgContainer.classList.add("hide");
 };
 
+boxes.forEach((box) => {
+    box.addEventListener("click", () => {
+        console.log("box was clicked");
+        box.innerText = turnO? "O" : "X";
+        turnO = !turnO;
+        box.disabled = true;
+        count++;
+        checkWinner();    // If There is a winner, game exits here
+        if (count === 9) gameDraw();
+    });
+});
+
+const gameDraw = () => {
+    msg.innerText = "Game ended in a Draw";
+    msgContainer.classList.remove("hide");
+};
 
 const showWinner = (winner) => {
-    msg.innerText = `Congratulations , Winner is ${winner}`;
+    msg.innerText = `Congratulations, ${winner}, you won`;
     msgContainer.classList.remove("hide");
-    disableBoxes();
 };
 
 const checkWinner = () => {
@@ -79,7 +61,7 @@ const checkWinner = () => {
             }
         }
     }
-
 };
+
 newGameBtn.addEventListener("click", resetGame);
 resetBtn.addEventListener("click", resetGame);
